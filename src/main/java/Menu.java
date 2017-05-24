@@ -10,9 +10,11 @@ import java.util.Scanner;
 public class Menu {
 
     public static void main(String[] args) {
-
         ExpensesService expensesService = new ExpensesService();
         Session session= (Session) HibernateUtil.getSessionFactory().openSession().close();
+        System.out.println(" ");
+        System.out.println("Hello!");
+        System.out.println("enter 'help' to see menu\n");
         while (true) {
             Scanner scanner = new Scanner(System.in);
             String myString = scanner.nextLine();
@@ -35,7 +37,7 @@ public class Menu {
                     break;
                 }
                 case "list": {
-                        expensesService.getAllExpenses();
+                    expensesService.getAllExpenses();
                     break;
                 }
                 case "clear":{
@@ -59,10 +61,20 @@ public class Menu {
                     }
                     break;
                 }
-//                case "clear":{
-//                    for(int clear = 0; clear < 100; clear++) {
-//                        System.out.println(" ") ;
-//                    }
+                case "help":{
+                    System.out.println("'add [yyyy-MM-dd price currency productName]' — adds expense entry to the list\n" +
+                            "'list' — shows the list of all expenses\n" +
+                            "'clear [yyyy-MM-dd]'  — removes all expenses for specified date\n" +
+                            "'total [currency]' - calculate the total amount of money spent in specified currency\n" +
+                            "'currency' - to see the available currencies"+
+                            "'clr' - to clear the console\n" +
+                            "'exit' - to quit");
+                    break;
+                }
+                case "clr":{
+                    for(int clear = 0; clear < 100; clear++) {
+                        System.out.println(" ") ;
+                    }
 //                    final String operatingSystem = System.getProperty("os.name");
 //                    System.out.println(operatingSystem);
 //                    try {
@@ -75,8 +87,8 @@ public class Menu {
 //                    } catch (IOException e) {
 //                        e.printStackTrace();
 //                    }
-//                    break;
-//                }
+                    break;
+                }
                 case "currency":{
                     System.out.println(expensesService.currencyArrayList.toString());
                     break;
@@ -86,7 +98,8 @@ public class Menu {
                     break;
                 }
                 default:{
-                    System.out.println("unknown command \nPlease try again");
+                    System.out.println("unknown command \nPlease try again or\n enter 'help' to see menu");
+                    break;
                 }
             }
 
@@ -95,3 +108,4 @@ public class Menu {
 
     }
 }
+

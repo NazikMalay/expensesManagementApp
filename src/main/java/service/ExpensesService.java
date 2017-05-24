@@ -21,7 +21,7 @@ import java.util.*;
 
 public class ExpensesService {
 
-    public final String BASE_URL = "http://api.fixer.io/";
+    private final String BASE_URL = "http://api.fixer.io/";
 
     private String[] ratesList = {"AUD", "BGN", "BRL", "CAD", "CHF", "CNY", "CZK",
             "DKK", "GBP", "HKD", "HRK", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK",
@@ -42,7 +42,7 @@ public class ExpensesService {
             return false;
 
         } catch (NumberFormatException e) {
-            System.out.println("price is wrong " + price);
+            System.out.println("price is wrong " + price + " please enter the number");
             return false;
         }
         if (currencyArrayList.contains(currency.toUpperCase())) {
@@ -83,7 +83,7 @@ public class ExpensesService {
         }
     }
 
-    public void total(String s) throws Exception{
+    public void total(String s) throws Exception {
         if (currencyArrayList.contains(s.toUpperCase())) {
             Gson gson = new Gson();
             List<Expenses> list = expensesRepository.getAllExpenses();
@@ -94,15 +94,14 @@ public class ExpensesService {
                 Double count = 0.0;
                 while (iterator.hasNext()) {
                     Expenses ex = iterator.next();
-                    if (ex.getCurrency().equals(s.toUpperCase())){
-                        count+=ex.getPrice();
-                    }else {
+                    if (ex.getCurrency().equals(s.toUpperCase())) {
+                        count += ex.getPrice();
+                    } else {
                         JsonElement data = currencyService.getRates(ex.getCurrency(), s.toUpperCase()).execute().body();
                         JsonElement jsonRates = data.getAsJsonObject().get("rates");
                         Rates rates = gson.fromJson(jsonRates, Rates.class);
-                        HashMap<String, Object> hashMap =(HashMap<String, Object>) introspect(rates);
-                        System.out.println(hashMap.entrySet());
-                        count += (ex.getPrice() * (Double)hashMap.get(s.toUpperCase()));
+                        HashMap<String, Object> hashMap = (HashMap<String, Object>) introspect(rates);
+                        count += (ex.getPrice() * (Double) hashMap.get(s.toUpperCase()));
                     }
                 }
                 count = (Math.round(count * 100.0) / 100.0);
@@ -118,13 +117,14 @@ public class ExpensesService {
         }
     }
 
-    private Map<String, Object> introspect(Object obj) throws Exception{
+    private Map<String, Object> introspect(Object obj) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
         BeanInfo info = Introspector.getBeanInfo(obj.getClass());
         for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
             Method reader = pd.getReadMethod();
-            if (reader != null)
+            if (reader != null) {
                 result.put(pd.getName(), reader.invoke(obj));
+            }
         }
         return result;
     }

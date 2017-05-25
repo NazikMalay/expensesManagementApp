@@ -78,7 +78,7 @@ public class Menu {
                             "'list' — shows the list of all expenses\n" +
                             "'clear [yyyy-MM-dd]'  — removes all expenses for specified date\n" +
                             "'total [currency]' - calculate the total amount of money spent in specified currency\n" +
-                            "'currency' - to see the available currencies" +
+                            "'currency' - to see the available currencies\n" +
                             "'clr' - to clear the console\n" +
                             "'exit' - to quit");
                     break;

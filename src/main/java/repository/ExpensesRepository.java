@@ -1,6 +1,7 @@
 package repository;
 
 import entity.Expenses;
+import org.hibernate.PropertyValueException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import service.HibernateUtil;
@@ -13,12 +14,19 @@ import java.util.List;
  */
 
 public class ExpensesRepository {
-    public void addExpenses(Expenses expenses){
-        Session session= HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        session.save(expenses);
-        session.getTransaction().commit();
-        session.close();
+    public Boolean addExpenses(Expenses expenses) {
+        try {
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            session.beginTransaction();
+            session.save(expenses);
+            session.getTransaction().commit();
+            session.close();
+            return true;
+        }catch (PropertyValueException e){
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
 
@@ -40,4 +48,13 @@ public class ExpensesRepository {
         session.getTransaction().commit();
         session.close();
     }
+    public void deleteByObj(Expenses expenses){
+        Session session= HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.delete(expenses);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+
 }

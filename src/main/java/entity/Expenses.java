@@ -22,6 +22,12 @@ public class Expenses {
     @Column(name = "PRODUCT_NAME", nullable = false)
     private String productName;
 
+    public Expenses(Date date, Double price, String currency, String productName) {
+        this.date = date;
+        this.price = price;
+        this.currency = currency;
+        this.productName = productName;
+    }
 
     public Expenses() {
     }

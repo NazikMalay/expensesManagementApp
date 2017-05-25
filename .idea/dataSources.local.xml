@@ -2,10 +2,14 @@
 <project version="4">
   <component name="dataSourceStorageLocal">
     <data-source name="hibernate.cfg.xml/Hibernate" uuid="33bcc922-a225-4262-9678-3d093df9e306">
-      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" />
-      <first-sync>true</first-sync>
+      <database-info product="MySQL" version="5.7.18-0ubuntu0.16.04.1" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.40 ( Revision: 402933ef52cad9aa82624e80acbea46e3a701ce6 )">
+        <extra-name-characters>#@</extra-name-characters>
+        <identifier-quote-string>`</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="exact" quoted-identifiers="exact" />
       <user-name>root</user-name>
       <user-password>df9bdf98df99df9e</user-password>
+      <resolve-scope>expensesManagement:</resolve-scope>
     </data-source>
     <data-source name="MySQL - expensesManagement@localhost" uuid="e597add6-aaa7-4499-99bd-904b18a9dba2">
       <database-info product="MySQL" version="5.7.18-0ubuntu0.16.04.1" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.40 ( Revision: 402933ef52cad9aa82624e80acbea46e3a701ce6 )">

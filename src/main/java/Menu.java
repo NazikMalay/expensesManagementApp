@@ -54,10 +54,12 @@ public class Menu {
                 case "total":{
                     if (list.length == 2){
                         try {
-                            expensesService.total(list[1]);
+                                System.out.println(expensesService.total(list[1]));
                         } catch (Exception e) {
+                            System.err.println("some problem with getting Currency from //api.fixer.io/");
                             e.printStackTrace();
                         }
+
                     }
                     break;
                 }

@@ -16,6 +16,14 @@
         <property name="characterSetResults" value="utf8" />
         <property name="yearIsDateType" value="false" />
       </driver-properties>
+      <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/mysql-connector-license.txt</url>
+        </library>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/mysql-connector-java-5.1.40-bin.jar</url>
+        </library>
+      </libraries>
     </data-source>
     <data-source source="LOCAL" name="MySQL - expensesManagement@localhost" uuid="e597add6-aaa7-4499-99bd-904b18a9dba2">
       <driver-ref>mysql</driver-ref>

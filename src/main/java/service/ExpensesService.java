@@ -23,7 +23,7 @@ public class ExpensesService {
 
     private final String BASE_URL = "http://api.fixer.io/";
 
-    private String[] ratesList = {"AUD", "BGN", "BRL", "CAD", "CHF", "CNY", "CZK",
+    private final String[] ratesList = {"AUD", "BGN", "BRL", "CAD", "CHF", "CNY", "CZK",
             "DKK", "GBP", "HKD", "HRK", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK",
             "NZD", "PHP", "PLN", "RON", "RUB", "SEK", "SGD", "THB", "TRY", "USD", "ZAR", "EUR"};
     public List<String> currencyArrayList = Arrays.asList(ratesList);
@@ -83,11 +83,11 @@ public class ExpensesService {
         }
     }
 
-    public void total(String s) throws Exception {
+    public String total(String s) throws Exception {
         if (currencyArrayList.contains(s.toUpperCase())) {
             Gson gson = new Gson();
-            List<Expenses> list = expensesRepository.getAllExpenses();
             CurrencyService currencyService = RetrofitUtil.getClient(BASE_URL).create(CurrencyService.class);
+            List<Expenses> list = expensesRepository.getAllExpenses();
             try {
                 Iterator<Expenses> iterator = list.iterator();
 
@@ -105,16 +105,33 @@ public class ExpensesService {
                     }
                 }
                 count = (Math.round(count * 100.0) / 100.0);
-                System.out.println(count + " " + s.toUpperCase());
+                return count.toString() + " " + s.toUpperCase();
             } catch (IOException e) {
                 e.printStackTrace();
-                System.err.println("some problem with getting Currency from " + BASE_URL);
+                return "some problem with getting Currency from " + BASE_URL;
             }
-
-
-        } else {
-            System.out.println("Sorry, I have not found such currency,\n you can view the available currency typing 'currency'");
         }
+            return  "Sorry, I have not found such currency,\n you can view the available currency typing 'currency'";
+
+    }
+
+    public Rates getRatesByBase(String base){
+        if (currencyArrayList.contains(base.toUpperCase())) {
+            Gson gson = new Gson();
+            CurrencyService currencyService = RetrofitUtil.getClient(BASE_URL).create(CurrencyService.class);
+            try {
+                JsonElement data = currencyService.getRatesByBase(base.toUpperCase()).execute().body();
+                JsonElement jsonRates = data.getAsJsonObject().get("rates");
+                Rates rates = gson.fromJson(jsonRates, Rates.class);
+                return rates;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            System.out.println("Sorry, I have not found such currency,\n you can view the available currency typing 'currency'");
+            return null;
+        }
+        return null;
     }
 
     private Map<String, Object> introspect(Object obj) throws Exception {

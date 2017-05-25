@@ -18,25 +18,20 @@ public class ExpensesServiceTest {
 
     @Test
     public void testCreateExpenses() throws Exception {
-        Assert.assertTrue(expensesService.createExpenses("1900-1-1", "123.2", "AUD", "juice"));
-        Assert.assertTrue(expensesService.deleteExpensesByDate("1900-1-1"));
-    }
-
-    @Test
-    public void testGetAllExpenses() throws Exception {
-        //?
+        Assert.assertTrue(expensesService.createExpenses("1900-1-1", "123.2", "AUD", "juice").getState());
+        Assert.assertTrue(expensesService.deleteExpensesByDate("1900-1-1").getState());
     }
 
     @Test
     public void testDeleteExpensesByDate() throws Exception {
-        Assert.assertTrue(expensesService.createExpenses("1900-1-1", "123.2", "AUD", "juice"));
-        Assert.assertTrue(expensesService.deleteExpensesByDate("1900-1-1"));
+        Assert.assertTrue(expensesService.createExpenses("1900-1-1", "123.2", "AUD", "juice").getState());
+        Assert.assertTrue(expensesService.deleteExpensesByDate("1900-1-1").getState());
     }
 
     @Test
     public void testTotal() throws Exception {
-        String a = expensesService.total("USD");
-        String b = expensesService.total("EUR");
+        String a = expensesService.total("USD").getMassage();
+        String b = expensesService.total("EUR").getMassage();
         String[] first = a.split(" ");
         String[] second = b.split(" ");
         Rates rates = expensesService.getRatesByBase("USD");
@@ -54,7 +49,6 @@ public class ExpensesServiceTest {
             Method method = expensesService.getClass().getDeclaredMethod("introspect", Object.class);
             method.setAccessible(true);
             Assert.assertNotNull(method.invoke(expensesService, expenses));
-//            System.out.println(method.invoke(expensesService, expenses).toString());
     }
 
 } 

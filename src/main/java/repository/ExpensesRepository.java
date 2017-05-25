@@ -4,7 +4,7 @@ import entity.Expenses;
 import org.hibernate.PropertyValueException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import service.HibernateUtil;
+import util.HibernateUtil;
 
 import java.util.Date;
 import java.util.List;

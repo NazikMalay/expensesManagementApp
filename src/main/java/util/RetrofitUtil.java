@@ -1,4 +1,4 @@
-package service;
+package util;
 
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;

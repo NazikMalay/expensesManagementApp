@@ -13,10 +13,7 @@ public interface CurrencyService {
     @GET("latest")
     Call<JsonElement> getRates(@Query("base") String base,@Query("symbols") String symbols);
 
-
     @GET("latest")
     Call<JsonElement> getRatesByBase(@Query("base") String base);
-
-
 }
 

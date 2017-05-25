@@ -5,6 +5,9 @@ import com.google.gson.JsonElement;
 import data.Rates;
 import entity.Expenses;
 import repository.ExpensesRepository;
+import util.ExpensesComparator;
+import util.MyResp;
+import util.RetrofitUtil;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -22,75 +25,60 @@ import java.util.*;
 public class ExpensesService {
 
     private final String BASE_URL = "http://api.fixer.io/";
-
+    private MyResp myResp = new MyResp();
     private final String[] ratesList = {"AUD", "BGN", "BRL", "CAD", "CHF", "CNY", "CZK",
             "DKK", "GBP", "HKD", "HRK", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK",
             "NZD", "PHP", "PLN", "RON", "RUB", "SEK", "SGD", "THB", "TRY", "USD", "ZAR", "EUR"};
     public List<String> currencyArrayList = Arrays.asList(ratesList);
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-
     private ExpensesRepository expensesRepository = new ExpensesRepository();
 
-    public Boolean createExpenses(String date, String price, String currency, String productName) {
+    public MyResp createExpenses(String date, String price, String currency, String productName) {
         Expenses exp = new Expenses();
         try {
             exp.setDate(simpleDateFormat.parse(date));
             exp.setPrice(Math.round(Double.parseDouble(price) * 100.0) / 100.0);
         } catch (ParseException e) {
-            System.out.println("Your date is wrong!" + date);
-            return false;
-
+            return new MyResp(false,"Your date is wrong! " + date);
         } catch (NumberFormatException e) {
-            System.out.println("price is wrong " + price + " please enter the number");
-            return false;
+            return new MyResp(false,"price is wrong " + price + " please enter the number");
         }
-        if (currencyArrayList.contains(currency.toUpperCase())) {
+        if (currencyArrayList.contains(currency.toUpperCase()) && exp.getPrice() <= 100000.0) {
             exp.setCurrency(currency.toUpperCase());
         } else {
-            System.out.println("Sorry, I have not found such currency,\n you can view the available currency typing 'currency'");
-            return false;
+            return new MyResp(false,"Sorry, I have not found such currency,\n you can view the available currency typing 'currency'\n" +
+                    "or your price is too high " + exp.getPrice() + " max price 100000");
         }
         exp.setProductName(productName);
         expensesRepository.addExpenses(exp);
-        return true;
-    }
-
-    public void getAllExpenses() {
         List<Expenses> list = expensesRepository.getAllExpenses();
         Collections.sort(list, new ExpensesComparator());
-        Iterator<Expenses> iterator = list.iterator();
-        String date = "";
-
-        while (iterator.hasNext()) {
-            Expenses ex = iterator.next();
-            if (date.equals(simpleDateFormat.format(ex.getDate()))) {
-            } else {
-                date = simpleDateFormat.format(ex.getDate());
-                System.out.println(" ");
-                System.out.println(simpleDateFormat.format(ex.getDate()));
-            }
-            System.out.println(ex.getProductName() + " " + ex.getPrice() + " " + ex.getCurrency());
-        }
+        return new MyResp(true, list);
     }
 
-    public Boolean deleteExpensesByDate(String s) {
+    public MyResp getAllExpenses() {
+        List<Expenses> list = expensesRepository.getAllExpenses();
+        Collections.sort(list, new ExpensesComparator());
+        return new MyResp(true,list);
+    }
+
+    public MyResp deleteExpensesByDate(String s) {
         try {
             expensesRepository.deleteByDate(simpleDateFormat.parse(s));
-            return true;
+            return new MyResp(true);
         } catch (ParseException e) {
-            return false;
+            return new MyResp(false);
         }
     }
 
-    public String total(String s) throws Exception {
+    public MyResp total(String s) throws Exception {
         if (currencyArrayList.contains(s.toUpperCase())) {
             Gson gson = new Gson();
             CurrencyService currencyService = RetrofitUtil.getClient(BASE_URL).create(CurrencyService.class);
             List<Expenses> list = expensesRepository.getAllExpenses();
             try {
                 Iterator<Expenses> iterator = list.iterator();
-
                 Double count = 0.0;
                 while (iterator.hasNext()) {
                     Expenses ex = iterator.next();
@@ -105,14 +93,13 @@ public class ExpensesService {
                     }
                 }
                 count = (Math.round(count * 100.0) / 100.0);
-                return count.toString() + " " + s.toUpperCase();
+                return new MyResp(true,count.toString() + " " + s.toUpperCase());
             } catch (IOException e) {
                 e.printStackTrace();
-                return "some problem with getting Currency from " + BASE_URL;
+                return new MyResp(false,"some problem with getting Currency from " + BASE_URL);
             }
         }
-            return  "Sorry, I have not found such currency,\n you can view the available currency typing 'currency'";
-
+            return new MyResp(false, "Sorry, I have not found such currency,\n you can view the available currency typing 'currency'");
     }
 
     public Rates getRatesByBase(String base){
@@ -146,4 +133,19 @@ public class ExpensesService {
         return result;
     }
 
+    public void soutList(List<Expenses> list){
+        Iterator iterator = list.iterator();
+        String date = "";
+
+        while (iterator.hasNext()) {
+            Expenses ex = (Expenses) iterator.next();
+            if (date.equals(simpleDateFormat.format(ex.getDate()))) {
+            } else {
+                date = simpleDateFormat.format(ex.getDate());
+                System.out.println(" ");
+                System.out.println(simpleDateFormat.format(ex.getDate()));
+            }
+            System.out.println(ex.getProductName() + " " + ex.getPrice() + " " + ex.getCurrency());
+        }
+    }
 }
